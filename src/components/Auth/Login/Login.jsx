@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-
+import { useSelector } from "react-redux";
 import { Button, TextField, Grid, Typography } from "@mui/material";
 
-import { loginUser } from "./actions";
+import ErrorPopup from "../../ErrorPopup/ErrorPopup";
+
+import { useAuthActionsDispatch } from "../../../common/hooks/useActions";
 
 const initialFormFields = {
   username: "",
@@ -12,10 +13,14 @@ const initialFormFields = {
 };
 
 const Login = () => {
+  //login user dispatch
+  const { loginUser } = useAuthActionsDispatch();
+
+  //get error from state
+  const { error, open } = useSelector((state) => state.getErrorPopup);
+
   //store the input values in state
   const [formFields, setFormFields] = useState(initialFormFields);
-
-  const dispatch = useDispatch();
 
   const { username, password } = formFields;
 
@@ -23,7 +28,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    dispatch(loginUser(username, password));
+    loginUser(username, password);
   };
 
   const handleChange = (e) => {
@@ -36,6 +41,9 @@ const Login = () => {
       <Grid item className="title">
         <Typography variant="h5">Sign in</Typography>
       </Grid>
+
+      {error ? <ErrorPopup error={error} open={open} /> : ""}
+
       <Grid item>
         <form onSubmit={handleSubmit}>
           <Grid container direction="column" spacing={2} className="input-fields">
@@ -82,7 +90,7 @@ const Login = () => {
       <Grid item className="logo">
         <img src="/carLogo.png" alt="logo" />
         <br />
-        <span>Copyright © Mobile ${new Date().getFullYear()}</span>
+        <span>Copyright © Mobile{new Date().getFullYear()}</span>
       </Grid>
     </>
   );

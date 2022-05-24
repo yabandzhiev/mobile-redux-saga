@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, TextField, Grid, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
 
-import { registerUser } from "./actions";
+import { useAuthActionsDispatch } from "../../../common/hooks/useActions";
+import { useSelector } from "react-redux";
+import ErrorPopup from "../../ErrorPopup/ErrorPopup";
 
 const initialFormFields = {
   username: "",
@@ -13,17 +14,31 @@ const initialFormFields = {
 };
 
 const Register = () => {
+  const { registerUser } = useAuthActionsDispatch();
   //store the values in state
   const [formFields, setFormFields] = useState(initialFormFields);
 
+  //get the values
   const { username, password, firstName, lastName } = formFields;
 
-  const dispatch = useDispatch();
+  //form input error state
+  const [errorText, setErrorText] = useState(initialFormFields);
 
-  const isTextLengthInBoundary = (field) => field.length < 3 || field.length > 30;
+  //get error from state
+  const { error, open } = useSelector((state) => state.getErrorPopup);
+
+  //validate every input length
+  const checkInputLength = (e, name) => {
+    if (e.target.value.length < 3 || e.target.value.length > 15) {
+      setErrorText({ ...errorText, [name]: `${name} must be between 3 and 15 letters` });
+    } else {
+      setErrorText({ ...errorText, [name]: null });
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    checkInputLength(e, name);
 
     setFormFields({ ...formFields, [name]: value });
   };
@@ -32,13 +47,27 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(registerUser(username, password));
+    //check if there are errors in the errorText state
+    const isFormValid = Object.values(errorText).every((val) => {
+      if (val !== null) {
+        return false;
+      }
+      return true;
+    });
+
+    if (!isFormValid) {
+      return;
+    }
+
+    registerUser(username, password, firstName, lastName);
   };
   return (
     <>
       <Grid item className="title">
         <Typography variant="h5">Register</Typography>
       </Grid>
+
+      {error ? <ErrorPopup error={error} open={open} /> : ""}
 
       <Grid item>
         <form onSubmit={handleSubmit}>
@@ -50,18 +79,12 @@ const Register = () => {
                 name="firstName"
                 variant="outlined"
                 required
-                autoFocus
                 fullWidth
+                autoFocus
                 value={firstName}
                 onChange={handleChange}
-                error={isTextLengthInBoundary(firstName)}
-                helperText={
-                  firstName.length < 3
-                    ? "Name must be 3 letters or more!"
-                    : " " && firstName.length > 30
-                    ? "Name must be below 30 letters"
-                    : ""
-                }
+                error={errorText.firstName}
+                helperText={errorText.firstName}
               />
             </Grid>
             <Grid item>
@@ -75,15 +98,8 @@ const Register = () => {
                 fullWidth
                 value={lastName}
                 onChange={handleChange}
-                error={isTextLengthInBoundary(lastName)}
-                //errorMessage
-                helperText={
-                  lastName.length < 3
-                    ? "Last name must be 3 letters or more!"
-                    : " " && lastName.length > 30
-                    ? "Last name must be below 30 letters"
-                    : ""
-                }
+                error={errorText.lastName}
+                helperText={errorText.lastName}
               />
             </Grid>
           </Grid>
@@ -101,14 +117,8 @@ const Register = () => {
                 autoFocus
                 value={username}
                 onChange={handleChange}
-                error={isTextLengthInBoundary(username)}
-                helperText={
-                  username.length < 3
-                    ? "Username must be 3 letters or more!"
-                    : " " && username.length > 30
-                    ? "Username must be below 30 letters"
-                    : ""
-                }
+                error={errorText.username}
+                helperText={errorText.username}
               />
             </Grid>
             <Grid item>
@@ -121,14 +131,8 @@ const Register = () => {
                 fullWidth
                 value={password}
                 onChange={handleChange}
-                error={isTextLengthInBoundary(password)}
-                helperText={
-                  password.length < 3
-                    ? "Password must be 3 letters or more!"
-                    : " " && password.length > 30
-                    ? "Password must be below 30 letters"
-                    : ""
-                }
+                error={errorText.password}
+                helperText={errorText.password}
               />
             </Grid>
             <Grid item>
@@ -147,7 +151,7 @@ const Register = () => {
       </Grid>
 
       <Grid item className="logo">
-        <span>Copyright © Mobile {new Date().getFullYear()}</span>
+        <span>Copyright © Mobile{new Date().getFullYear()}</span>
       </Grid>
     </>
   );
