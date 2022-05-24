@@ -1,6 +1,7 @@
 import { LOGIN_REQUEST } from "./types";
 import { loginSuccess, loginError } from "./actions";
 import { put, take, call } from "redux-saga/effects";
+import { addErrorPopup, removeErrorPopup } from "../../ErrorPopup/actions";
 
 export default function* loginSaga(loginApi) {
   while (true) {
@@ -26,7 +27,9 @@ function* authorizeUser(loginApi, username, password) {
         successResponse.lastName
       )
     );
+    yield put(removeErrorPopup());
   } catch (error) {
+    yield put(addErrorPopup("Incorrect user details"));
     yield put(loginError(error));
   }
 }

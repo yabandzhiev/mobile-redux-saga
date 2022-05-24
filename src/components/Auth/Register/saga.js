@@ -1,4 +1,5 @@
 import { put, take, call } from "redux-saga/effects";
+import { addErrorPopup, removeErrorPopup } from "../../ErrorPopup/actions";
 import { loginUser } from "../Login/actions";
 import { registerError, registerSuccess } from "./actions";
 import { REGISTER_REQUEST } from "./types";
@@ -34,9 +35,13 @@ function* createUser(registerApi, username, password, firstName, lastName) {
 
     //call login request
     if (response) {
+      yield put(removeErrorPopup());
+
       yield put(loginUser(username, password));
     }
   } catch (error) {
+    yield put(addErrorPopup("User already exists!"));
+
     yield put(registerError(error));
   }
 }
