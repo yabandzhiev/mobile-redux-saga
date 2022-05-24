@@ -1,7 +1,8 @@
 import { ADD_ERROR_POPUP, REMOVE_ERROR_POPUP } from "../components/ErrorPopup/types";
 
 const initialState = {
-  errors: "",
+  open: false,
+  error: "",
 };
 
 export const errorPopupReducer = (state = initialState, action) => {
@@ -9,16 +10,18 @@ export const errorPopupReducer = (state = initialState, action) => {
     case ADD_ERROR_POPUP:
       return {
         ...state,
-        errors: action.payload,
+        open: true,
+        error: action.payload,
       };
 
     case REMOVE_ERROR_POPUP:
       return {
         ...state,
-        errors: "",
+        open: false,
+        error: "",
       };
 
     default:
-      state;
+      return state;
   }
 };
