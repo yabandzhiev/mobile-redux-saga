@@ -8,6 +8,7 @@ import { userSessionReducer } from "./userSessionReducer";
 import { createCarReducer } from "./createCarReducer";
 import { editCarReducer } from "./editCarReducer";
 import { deleteCarReducer } from "./deleteCarReducer";
+import { errorPopupReducer } from "./errorPopupReducer";
 
 export default function createReducer() {
   const rootReducer = combineReducers({
@@ -19,6 +20,7 @@ export default function createReducer() {
     createCar: createCarReducer,
     editCar: editCarReducer,
     deleteCar: deleteCarReducer,
+    getErrorPopup: errorPopupReducer,
   });
   return rootReducer;
 }
