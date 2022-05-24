@@ -1,12 +1,11 @@
 import { Button } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { logoutUser } from "./actions";
+import { useAuthActionsDispatch } from "../../../common/hooks/useActions";
 
 const LogoutButton = () => {
-  const dispatch = useDispatch();
+  const { logoutUser } = useAuthActionsDispatch();
 
   const onLogoutClick = () => {
-    dispatch(logoutUser());
+    logoutUser();
   };
 
   return <Button onClick={onLogoutClick}>Logout</Button>;
