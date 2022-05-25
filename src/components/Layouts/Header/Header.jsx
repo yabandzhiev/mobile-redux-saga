@@ -7,16 +7,16 @@ import LogoutButton from "../../Auth/Logout/LogoutButton";
 import LoginButton from "../../Auth/Login/LoginButton/LoginButton";
 
 const Header = () => {
-  const { currentUser } = useSelector((state) => state.userSession);
+  const { firstName, lastName } = useSelector((state) => state.userSession);
 
   return (
     <>
       <div className="header">
         <img src="/carLogo.png" alt="logo" className="logo" />
 
-        {currentUser ? (
-          <div>
-            Hello, {currentUser}
+        {firstName ? (
+          <div className="logout">
+            Hello, {firstName} {lastName}
             <LogoutButton />
           </div>
         ) : (

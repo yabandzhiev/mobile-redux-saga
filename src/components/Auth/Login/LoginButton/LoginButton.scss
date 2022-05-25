@@ -1,0 +1,8 @@
+.loginButton {
+  color: white !important;
+  font-weight: bold !important;
+
+  &:hover {
+    color: blue !important;
+  }
+}

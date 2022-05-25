@@ -1,0 +1,10 @@
+@import "../../../constants/variables.scss";
+
+.logoutButton {
+  color: $buttonColor-white !important;
+  font-weight: bold !important;
+
+  &:hover {
+    color: red !important;
+  }
+}

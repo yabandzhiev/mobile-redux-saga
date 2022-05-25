@@ -24,7 +24,7 @@ const ErrorPopup = ({ error, open }) => {
                 <CloseIcon fontSize="inherit" />
               </IconButton>
             }
-            sx={{ mb: 2 }}
+            sx={{ backgroundColor: "rgb(253, 237, 237) !important" }}
           >
             {error}
           </Alert>
