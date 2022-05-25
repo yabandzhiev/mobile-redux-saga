@@ -10,7 +10,7 @@ import storage from "redux-persist/lib/storage";
 const persistConfig = {
   key: "root",
   storage: storage,
-  blacklist: ["redirect", "getCars"],
+  blacklist: ["redirect", "getCars", "getErrorPopup"],
 };
 
 const persistedReducer = persistReducer(persistConfig, createReducer());
